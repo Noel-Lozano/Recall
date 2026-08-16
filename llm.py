@@ -1,12 +1,11 @@
 """
-Generation layer: send retrieved chunks + question to Claude via the
-Anthropic API.
+Generation layer: send retrieved chunks + question to Llama 3.3 70B via
+Groq's free API.
 
-WHY this is wrapped in a function instead of called inline from main.py:
-this is the payoff of that design decision — swapping from a local Ollama
-model to a cloud API touched ONLY this file. main.py, vectorstore.py, and
-everything else are unchanged. If you swap to OpenAI later, or back to a
-local model for the multi-user hosting phase, same story.
+WHY Groq specifically: genuinely free tier, OpenAI-compatible API shape, and fast LPU
+inference. Tradeoff: rate-limited and only serves open-source models — so citation discipline may
+be slightly less strict than Claude's. That's a good thing to actually
+measure in eval/eval_harness.py rather than take my word for.
 
 WHY the prompt forces citations: an LLM given retrieved text will happily
 blend it with its own outside knowledge unless explicitly told not to.
@@ -14,15 +13,15 @@ Forcing "only answer from the provided context, and cite which chunk"
 is what turns this from a generic chatbot into something you can actually
 trust and measure faithfulness on in eval/eval_harness.py.
 
-Requires an ANTHROPIC_API_KEY environment variable (see README for setup).
+Requires a GROQ_API_KEY environment variable (see README for setup).
 """
 
 import os
-from anthropic import Anthropic
+from groq import Groq
 
-MODEL_NAME = "claude-haiku-4-5-20251001"
+MODEL_NAME = "llama-3.3-70b-versatile"
 
-client = Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 SYSTEM_PROMPT = """You are a study assistant. Answer the user's question using
 ONLY the provided context chunks below. If the answer isn't in the context,
@@ -40,10 +39,12 @@ def generate_answer(question: str, retrieved_chunks: list[dict]) -> str:
 
     user_message = f"Context:\n{context}\n\nQuestion: {question}"
 
-    response = client.messages.create(
+    response = client.chat.completions.create(
         model=MODEL_NAME,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_message},
+        ],
         max_tokens=1000,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_message}],
     )
-    return response.content[0].text
+    return response.choices[0].message.content
