@@ -1,4 +1,4 @@
-# Study Assistant RAG — Phase 0 Baseline
+# Study Assistant RAG — Phase 1 Baseline
 
 A fully local RAG system: upload your notes (PDFs), ask questions, get grounded
 answers with citations back to the source chunk.
