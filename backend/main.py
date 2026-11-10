@@ -14,6 +14,7 @@ from pathlib import Path
 from fastapi import FastAPI, UploadFile, File
 
 from ingestion.chunking import process_pdf
+from retrieval.reranker import DEFAULT_CANDIDATES, Reranker
 from retrieval.vectorstore import VectorStore
 from generation.llm import generate_answer
 
@@ -21,6 +22,7 @@ app = FastAPI(title="Study Assistant RAG - Phase 0")
 
 # Single shared store for now — becomes per-user later
 store = VectorStore(user_id="default_user")
+reranker = Reranker()
 
 
 @app.post("/upload")
@@ -41,7 +43,10 @@ async def upload_pdf(file: UploadFile = File(...)):
 
 @app.post("/query")
 async def query(question: str, top_k: int = 3):
-    retrieved = store.search(question, top_k=top_k)
+    # Two-stage retrieval: cheap dense search for candidates, then the
+    # cross-encoder picks the best top_k of them (see retrieval/reranker.py)
+    candidates = store.search(question, top_k=max(DEFAULT_CANDIDATES, top_k))
+    retrieved = reranker.rerank(question, candidates, top_k=top_k)
     if not retrieved:
         return {"answer": "No notes uploaded yet.", "sources": []}
 

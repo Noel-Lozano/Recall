@@ -1,15 +1,784 @@
 {
-  "_instructions": "Replace these examples with 20-50 questions about the PDFs in eval/docs/. 'evidence' is a short phrase (1 sentence or less, under ~150 chars so it fits in the chunk overlap) copied from your notes that contains the answer. Use several snippets if the answer needs them.",
+  "_instructions": "DRAFT written by Claude from the extracted slide text. Before using: rephrase each question the way you'd actually ask it while studying, delete any that are too easy, and add your own. Evidence phrases are copied from the PDF's extracted text, so don't edit them unless you re-copy from the PDF. 'source' is informational only (the harness ignores it). 'set' marks where each question came from: 'slides' = drafted from slide text; 'exam_style' = modeled on real data-mining quiz/exam questions from university courses found online, limited to ones these slides can answer. Report Recall@k per set too.",
   "questions": [
     {
-      "id": "q1",
-      "question": "What is the powerhouse of the cell?",
-      "evidence": ["mitochondria are the powerhouse of the cell"]
+      "id": "km1",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "Why might k-means give a different result every time I run it?",
+      "evidence": [
+        "will depend on the initial (random) cluster assignment of each observation"
+      ],
+      "set": "slides"
     },
     {
-      "id": "q2",
-      "question": "What two things does photosynthesis produce?",
-      "evidence": ["produces glucose", "releases oxygen"]
+      "id": "km2",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "What's the time complexity of k-means?",
+      "evidence": [
+        "Relatively efficient: O( tkn), where n is # data samples"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "km3",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "What are the main downsides of k-means?",
+      "evidence": [
+        "Need to specify K, the number of clusters, in advance",
+        "Unable to handle noisy data and outliers"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "km4",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "How can clustering be used to compress data?",
+      "evidence": [
+        "Using only cluster centers to represent/approximate the whole dataset",
+        "Compress new data by finding and save the index of the closest center"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "km5",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "What three ingredients does any clustering method need?",
+      "evidence": [
+        "Similarity ( s) or distance ( d) measurements",
+        "Optimization algorithm to minimize the cost function"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "km6",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "What is inertia?",
+      "evidence": [
+        "Within-cluster sum-of-squares ( inertia)"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "km7",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "Why not just try every possible way of assigning points to clusters?",
+      "evidence": [
+        "Find the global optimal but not practical"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "km8",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "How does k-means decide which cluster a point belongs to?",
+      "evidence": [
+        "assign the data to the cluster with the smallest distance"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "db1",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "What's the difference between a core point and a border point?",
+      "evidence": [
+        "Has ≥ MinPts within ε-radius (interior anchor)",
+        "Falls within ε of core, but has < MinPts neighbors"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "db2",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "How do I choose epsilon for DBSCAN?",
+      "evidence": [
+        "Order points by distance to kth neighbor",
+        "Sharp elbow identifies optimal ε"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "db3",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "When does density-based clustering break down?",
+      "evidence": [
+        "Single ε cannot fit multiple densities",
+        "Too Large ε: Inadvertently merges adjacent dense"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "db4",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "Does a point count itself when measuring density?",
+      "evidence": [
+        "Crucially counts the query point itself"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "db5",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "Which clustering method can find spiral or ring-shaped clusters?",
+      "evidence": [
+        "Discovers interlaced spirals, rings, and letters"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "db6",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "What makes a point an outlier in DBSCAN?",
+      "evidence": [
+        "Neither core nor border; isolated outlier"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "hc1",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "Walk me through the agglomerative clustering algorithm.",
+      "evidence": [
+        "Treat each data point as a cluster",
+        "Merge the two closest clusters (search the proximity matrix to identify the closest clusters)"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "hc2",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "What kind of cluster shapes is single link good at?",
+      "evidence": [
+        "Can handle non-elliptical shapes"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "hc3",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "What are the pros and cons of complete link (MAX)?",
+      "evidence": [
+        "Less sensitive to noise and outliers",
+        "Tends to break large clusters"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "hc4",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "How does Ward's method decide which clusters to merge?",
+      "evidence": [
+        "based on the increase in squared error when two clusters are merged"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "hc5",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "How much memory and time does hierarchical clustering need?",
+      "evidence": [
+        "O(N2) space since it uses the proximity matrix",
+        "Complexity can be reduced to O(N2 log(N) ) time"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "hc6",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "How do I get the number of clusters from a dendrogram?",
+      "evidence": [
+        "The number of vertical lines your horizontal line intersects equals your final number of clusters"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "hc7",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "Can hierarchical clustering fix a bad merge later?",
+      "evidence": [
+        "Once a decision is made to combine two clusters, it cannot be undone"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "ev1",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "Why bother evaluating clusters at all?",
+      "evidence": [
+        "To avoid finding patterns in noise"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "ev2",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "What's the difference between external and internal cluster evaluation?",
+      "evidence": [
+        "Supervised evaluation , which uses an external criterion",
+        "Unsupervised evaluation , which uses an internal criterion"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "ev3",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "What's the formula for the Rand index?",
+      "evidence": [
+        "Rand_Index = (TP + TN) / (TP + TN + FP + FN)"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "ev4",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "Does the silhouette score need ground truth labels?",
+      "evidence": [
+        "Evaluates how well-separated and cohesive clusters are without requiring ground-truth labels"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "ev5",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "When can the silhouette coefficient be misleading?",
+      "evidence": [
+        "Can be misleading for non-convex clusters",
+        "Sensitive to distance metric choice"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "ev6",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "Why is there a trade-off between SSE and BSS?",
+      "evidence": [
+        "Total sum of squares (TSS) = SSE + BSS is fixed for a given dataset"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "ev7",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "If k-means swaps the cluster numbers, is the clustering wrong?",
+      "evidence": [
+        "The k-means outcome is still correct but there is no direct match with the known assignments"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "cl1",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "What's the difference between multi-class and multi-label classification?",
+      "evidence": [
+        "Each input can belong to multiple classes simultaneously"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "cl2",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "How does ID3 pick which feature to split on?",
+      "evidence": [
+        "Choose the feature with the highest Information Gain"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "cl3",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "What's the Gini impurity of a node with 1 sample of one class and 5 of the other?",
+      "evidence": [
+        "Gini = 1 – (1/6)2 – (5/6)2 = 0.278"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "cl4",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "When does a decision tree stop growing a branch?",
+      "evidence": [
+        "Stop expanding a node when all the records belong to the same class"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "cl5",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "How do decision trees handle numeric features like income?",
+      "evidence": [
+        "consider all possible splits and finds the best cut"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "cl6",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "What prediction does a leaf with no training samples make?",
+      "evidence": [
+        "If leaf is empty, assign the default class"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "nb1",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "Why doesn't KNN need a training step?",
+      "evidence": [
+        "there is no functional model"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "nb2",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "What happens if I pick k too small or too large?",
+      "evidence": [
+        "If k is too small, sensitive to noise points",
+        "If k is too large, neighborhood may include points from other classes"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "nb3",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "How can nearest neighbor search be sped up?",
+      "evidence": [
+        "Multi-dimensional access methods (k-d trees)",
+        "Locality Sensitive Hashing (LSH)"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "nb4",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "What's the 'naive' assumption in naive Bayes?",
+      "evidence": [
+        "Assume independence among attributes Xi when class is given"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "nb5",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "What goes wrong when one probability in naive Bayes is zero, and how is it fixed?",
+      "evidence": [
+        "If one of the conditional probabilities is zero, then the entire expression becomes zero",
+        "To avoid 0 conditional probability, we apply smoothing"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "nb6",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "Give an example of conditional independence.",
+      "evidence": [
+        "Arm length and reading skills are conditionally independent given age"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "nb7",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "How does a Bayesian belief network represent dependence between variables?",
+      "evidence": [
+        "Arc corresponds to dependence relationship between a pair of variables"
+      ],
+      "set": "slides"
+    },
+    {
+      "id": "xkm1",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "True or false: k-means automatically finds the best value of k.",
+      "evidence": [
+        "Need to specify K, the number of clusters, in advance"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xkm2",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "Is k-means guaranteed to reach the best possible clustering?",
+      "evidence": [
+        "finds a local rather than a global optimum"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xkm3",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "Why does standard k-means struggle on very large datasets, and what's a fix?",
+      "evidence": [
+        "The standard K-means algorithm using the whole dataset in each iteration"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xkm4",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "Can k-means find long, stretched-out clusters?",
+      "evidence": [
+        "Not suitable to discover clusters with elongated and"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xkm5",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "What kind of optimization procedure does k-means use?",
+      "evidence": [
+        "Optimization: Two-phase iterative algorithm"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xkm6",
+      "source": "F26_5633_Kmeans.pdf",
+      "question": "How is clustering used for image segmentation?",
+      "evidence": [
+        "group similar image pixels in same region and lead to image segmentation"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xdb1",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "True or false: a density-based algorithm can produce non-globular clusters.",
+      "evidence": [
+        "Zero circular centroid assumptions"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xdb2",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "Do you have to tell DBSCAN how many clusters to find?",
+      "evidence": [
+        "Automatically determines natural cluster count"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xdb3",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "Why does DBSCAN perform poorly on high-dimensional data?",
+      "evidence": [
+        "Distances concentrate in high dimensions"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xdb4",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "What is the hierarchical extension of DBSCAN called?",
+      "evidence": [
+        "HDBSCAN offers hierarchical density clustering"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xdb5",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "Explain the idea behind the k-distance graph for picking eps.",
+      "evidence": [
+        "Cluster points share small k-NN distances; noise points have large distances"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xdb6",
+      "source": "F26_5362_dbscan.pdf",
+      "question": "What does it mean for two points to be density-connected?",
+      "evidence": [
+        "Two points mutually reachable from common core ancestor"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xhc1",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "Agglomerative vs divisive hierarchical clustering: which is used more often?",
+      "evidence": [
+        "More popular hierarchical clustering technique"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xhc2",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "What is the key step that distinguishes the different hierarchical clustering algorithms?",
+      "evidence": [
+        "The key operation is the computation of the proximity of two clusters"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xhc3",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "How does group average linkage relate to single and complete linkage?",
+      "evidence": [
+        "Compromise between MIN(Single) and MAX(Complete Link)"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xhc4",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "Compare k-means and hierarchical clustering in terms of choosing the number of clusters.",
+      "evidence": [
+        "Do not have to assume any particular number of clusters"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xhc5",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "Does hierarchical clustering optimize an overall objective function?",
+      "evidence": [
+        "No global objective function is directly minimized"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xhc6",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "What is the worst-case time complexity of agglomerative clustering?",
+      "evidence": [
+        "O(N3) time in many cases"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xhc7",
+      "source": "F26_5362_clustering_hierarchical.pdf",
+      "question": "Why is hierarchical clustering popular in biology?",
+      "evidence": [
+        "They may correspond to meaningful taxonomies"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xev1",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "The Rand index is most similar to which classification evaluation tool?",
+      "evidence": [
+        "Confusion matrix (similar to Rand Index)"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xev2",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "Can the silhouette score help choose K for k-means?",
+      "evidence": [
+        "A quantitative alternative or complement to the Elbow method to find an optimal number of clusters"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xev3",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "Which cluster evaluation metric is inflated by tiny clusters?",
+      "evidence": [
+        "Sensitive to tiny clusters? Yes (inflates purity)"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xev4",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "Which of purity, Rand index, and silhouette require ground-truth labels?",
+      "evidence": [
+        "Needs true labels?  ✔Yes  ✔Yes  ✘No"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xev5",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "In the Rand index, what counts as a positive pair?",
+      "evidence": [
+        "If a pair of points are in the same cluster created by a clustering algorithm"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xev6",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "Should a good clustering have high or low SSE and BSS?",
+      "evidence": [
+        "A good cluster approach should have low SSE, and high BSS"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xev7",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "Will k-means and DBSCAN find clusters even in uniformly random data?",
+      "evidence": [
+        "Clusters Found in Random Data"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xev8",
+      "source": "F26_5362_Evaluation_of_Clustering.pdf",
+      "question": "In the silhouette worked example, what is the average silhouette coefficient for algorithm B?",
+      "evidence": [
+        "ASC = (0.56+.63-0.226-0.56-0.21)/5 =  0.038"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xcl1",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "How is information gain computed in ID3?",
+      "evidence": [
+        "Subtract the resulting feature entropy from the starting dataset entropy"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xcl2",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "A parent node has Gini 0.486 and the weighted Gini of its children is 0.361. What is the gain?",
+      "evidence": [
+        "Gain = 0.486 – 0.361 = 0.125"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xcl3",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "What's the classification error of a node with 2 samples of one class and 4 of the other?",
+      "evidence": [
+        "Error = 1 – max (2/6, 4/6) = 1 – 4/6 = 1/3"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xcl4",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "What is the entropy of a pure node?",
+      "evidence": [
+        "Entropy = – 0 log 0 – 1 log 1 = – 0 – 0 = 0"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xcl5",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "How can a nominal attribute be split in a decision tree?",
+      "evidence": [
+        "Use as many partitions as distinct values"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xcl6",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "What constraint applies when making a binary split on an ordinal attribute?",
+      "evidence": [
+        "Divides values into two subsets – respects the order"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xcl7",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "What impurity measure does CART use for classification?",
+      "evidence": [
+        "For classification tasks, Gini impurity or entropy is calculated"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xcl8",
+      "source": "F26_5362_Classification_Intro.pdf",
+      "question": "True or false: a dataset has exactly one decision tree that fits it.",
+      "evidence": [
+        "There could be more than one tree that fits the same data"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xnb1",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "How does naive Bayes deal with missing values?",
+      "evidence": [
+        "Handle missing values by ignoring the instance"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xnb2",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "Why do correlated features hurt naive Bayes?",
+      "evidence": [
+        "Redundant and correlated attributes will violate class conditional assumption"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xnb3",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "How does naive Bayes handle a continuous attribute like income?",
+      "evidence": [
+        "Assume attribute follows a normal distribution"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xnb4",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "How can closer neighbors count more in a KNN vote?",
+      "evidence": [
+        "Weigh the vote according to distance"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xnb5",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "What does the decision boundary of 1-nearest neighbor look like?",
+      "evidence": [
+        "Voronoi Diagram defines the classification boundary"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xnb6",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "Can KNN be used for regression?",
+      "evidence": [
+        "Can be used for both classification and regression tasks"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xnb7",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "What is the MAP decision rule in a Bayes classifier?",
+      "evidence": [
+        "Maximum a-posteriori : Choose Y that maximizes"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xnb8",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "What kind of problems is multinomial naive Bayes typically used for?",
+      "evidence": [
+        "Commonly used in natural language processing (NLP) and text classification tasks"
+      ],
+      "set": "exam_style"
+    },
+    {
+      "id": "xnb9",
+      "source": "F26_5362_knn_and_Bayes_1.pdf",
+      "question": "In a Bayesian network, when is a node conditionally independent of other nodes?",
+      "evidence": [
+        "conditionally independent of all of its nondescendants, if its parents are known"
+      ],
+      "set": "exam_style"
     }
   ]
 }

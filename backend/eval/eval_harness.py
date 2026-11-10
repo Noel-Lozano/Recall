@@ -30,6 +30,7 @@ BACKEND_DIR = EVAL_DIR.parent
 sys.path.insert(0, str(BACKEND_DIR))  # so `ingestion` / `retrieval` import from anywhere
 
 from ingestion.chunking import process_pdf  # noqa: E402
+from retrieval.reranker import RERANK_MODEL, Reranker  # noqa: E402
 from retrieval.vectorstore import EMBEDDING_MODEL, VectorStore  # noqa: E402
 from metrics import contains_evidence, hit_at_k, normalize, recall_at_k, reciprocal_rank  # noqa: E402
 
@@ -82,6 +83,8 @@ def main():
     parser.add_argument("--k", type=int, nargs="+", default=[1, 3, 5, 10])
     parser.add_argument("--chunk-size", type=int, default=800)
     parser.add_argument("--overlap", type=int, default=150)
+    parser.add_argument("--rerank", action="store_true", help="rerank dense candidates with a cross-encoder")
+    parser.add_argument("--candidates", type=int, default=20, help="dense results handed to the reranker")
     parser.add_argument("--no-save", action="store_true", help="don't write a results JSON")
     args = parser.parse_args()
 
@@ -103,16 +106,28 @@ def main():
         if not any(contains_evidence(c, e) for c in all_chunks)
     ]
 
+    reranker = None
+    if args.rerank:
+        print(f"Reranking dense top-{args.candidates} with a cross-encoder...")
+        reranker = Reranker()
+    num_candidates = max(args.candidates, max_k) if reranker else max_k
+
     per_question = []
     for q in questions:
-        retrieved = [r["text"] for r in store.search(q["question"], top_k=max_k)]
-        per_question.append({
-            "id": q["id"],
-            "question": q["question"],
+        candidates = store.search(q["question"], top_k=num_candidates)
+        result = {"id": q["id"], "question": q["question"]}
+        if reranker:
+            # Ceiling: the reranker can only reorder what dense search found
+            dense = [c["text"] for c in candidates]
+            result["candidate_recall"] = recall_at_k(dense, q["evidence"], len(dense))
+            candidates = reranker.rerank(q["question"], candidates, top_k=max_k)
+        retrieved = [c["text"] for c in candidates]
+        result.update({
             **{f"recall@{k}": recall_at_k(retrieved, q["evidence"], k) for k in ks},
             **{f"hit@{k}": hit_at_k(retrieved, q["evidence"], k) for k in ks},
             "rr": reciprocal_rank(retrieved, q["evidence"]),
         })
+        per_question.append(result)
 
     n = len(per_question)
     summary = {
@@ -120,6 +135,8 @@ def main():
         **{f"hit@{k}": sum(r[f"hit@{k}"] for r in per_question) / n for k in ks},
         "mrr": sum(r["rr"] for r in per_question) / n,
     }
+    if reranker:
+        summary["candidate_recall"] = sum(r["candidate_recall"] for r in per_question) / n
 
     # ---- report ----
     print(f"\nRetrieval results over {n} questions")
@@ -127,6 +144,9 @@ def main():
     for k in ks:
         print(f"  Recall@{k:<3} {summary[f'recall@{k}']:.3f}    Hit@{k:<3} {summary[f'hit@{k}']:.3f}")
     print(f"  MRR        {summary['mrr']:.3f}")
+    if reranker:
+        print(f"  Ceiling: dense Recall@{num_candidates} = {summary['candidate_recall']:.3f}"
+              " (the reranker can't recover evidence outside its candidates)")
 
     report_k = 3 if 3 in ks else ks[0]
     misses = [r for r in per_question if r[f"recall@{report_k}"] < 1.0]
@@ -151,6 +171,8 @@ def main():
                 "chunk_size": args.chunk_size,
                 "overlap": args.overlap,
                 "embedding_model": EMBEDDING_MODEL,
+                "rerank_model": RERANK_MODEL if reranker else None,
+                "rerank_candidates": num_candidates if reranker else None,
                 "k": ks,
                 "num_questions": n,
                 "num_chunks": len(all_chunks),

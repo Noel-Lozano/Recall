@@ -29,6 +29,19 @@ EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 # create (and search) a second, empty database.
 DEFAULT_PERSIST_DIR = str(Path(__file__).resolve().parent.parent / "chroma_data")
 
+# WHY tune Chroma's HNSW index: HNSW is an *approximate* nearest-neighbour
+# search. Chroma's default search_ef=10 only explores ~10 candidates, so a
+# top-10 query can miss true neighbours, and multi-threaded index building
+# makes WHICH ones it misses change between runs. That made eval scores
+# drift by several points with no code change. A search_ef far above the
+# number of chunks makes search effectively exact for a notes-sized corpus,
+# and one build thread makes it reproducible. Both cost nothing at this scale.
+HNSW_SETTINGS = {
+    "hnsw:search_ef": 500,
+    "hnsw:construction_ef": 500,
+    "hnsw:num_threads": 1,
+}
+
 
 class VectorStore:
     def __init__(self, persist_dir: str = DEFAULT_PERSIST_DIR, user_id: str = "default_user"):
@@ -45,7 +58,9 @@ class VectorStore:
         # user right now: this is the schema decision that makes adding
         # real multi-user auth later a config change, not a rewrite.
         self.collection_name = f"notes_{user_id}"
-        self.collection = self.client.get_or_create_collection(self.collection_name)
+        self.collection = self.client.get_or_create_collection(
+            self.collection_name, metadata=HNSW_SETTINGS
+        )
         self.embedder = SentenceTransformer(EMBEDDING_MODEL)
 
     def _embed(self, texts: list[str]) -> list[Embedding]:
@@ -78,7 +93,9 @@ class VectorStore:
         """Delete every chunk in this collection (used by the eval harness
         to rebuild its index from scratch each run)."""
         self.client.delete_collection(self.collection_name)
-        self.collection = self.client.get_or_create_collection(self.collection_name)
+        self.collection = self.client.get_or_create_collection(
+            self.collection_name, metadata=HNSW_SETTINGS
+        )
 
     def search(self, query: str, top_k: int = 3) -> list[dict]:
         count = self.collection.count()
