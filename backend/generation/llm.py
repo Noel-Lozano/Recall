@@ -18,6 +18,9 @@ Requires a GROQ_API_KEY environment variable (see README for setup).
 
 import os
 from groq import Groq
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 MODEL_NAME = "llama-3.3-70b-versatile"
 
@@ -47,4 +50,5 @@ def generate_answer(question: str, retrieved_chunks: list[dict]) -> str:
         ],
         max_tokens=1000,
     )
-    return response.choices[0].message.content
+    content = response.choices[0].message.content
+    return content if content is not None else ""

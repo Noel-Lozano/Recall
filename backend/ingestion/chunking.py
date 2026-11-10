@@ -30,6 +30,9 @@ def chunk_text(text: str, chunk_size: int = 800, overlap: int = 150) -> list[str
     the full meaning. Overlap trades a bit of redundant storage for much
     better recall.
     """
+    if overlap >= chunk_size:
+        # Otherwise the step size is <= 0 and the loop never ends
+        raise ValueError("overlap must be smaller than chunk_size")
     chunks = []
     start = 0
     while start < len(text):
@@ -41,7 +44,7 @@ def chunk_text(text: str, chunk_size: int = 800, overlap: int = 150) -> list[str
     return chunks
 
 
-def process_pdf(pdf_path: str) -> list[str]:
+def process_pdf(pdf_path: str, chunk_size: int = 800, overlap: int = 150) -> list[str]:
     """End-to-end: PDF path -> list of text chunks."""
     text = extract_text(pdf_path)
-    return chunk_text(text)
+    return chunk_text(text, chunk_size=chunk_size, overlap=overlap)

@@ -1,0 +1,15 @@
+{
+  "_instructions": "Replace these examples with 20-50 questions about the PDFs in eval/docs/. 'evidence' is a short phrase (1 sentence or less, under ~150 chars so it fits in the chunk overlap) copied from your notes that contains the answer. Use several snippets if the answer needs them.",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is the powerhouse of the cell?",
+      "evidence": ["mitochondria are the powerhouse of the cell"]
+    },
+    {
+      "id": "q2",
+      "question": "What two things does photosynthesis produce?",
+      "evidence": ["produces glucose", "releases oxygen"]
+    }
+  ]
+}

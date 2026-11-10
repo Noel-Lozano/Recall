@@ -30,9 +30,11 @@ async def upload_pdf(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, tmp)
         tmp_path = tmp.name
 
-    chunks = process_pdf(tmp_path)
-    store.add_chunks(chunks, source=file.filename)
-    Path(tmp_path).unlink()  # clean up temp file
+    try:
+        chunks = process_pdf(tmp_path)
+        store.add_chunks(chunks, source=file.filename or "upload.pdf")
+    finally:
+        Path(tmp_path).unlink()  # clean up temp file even if parsing fails
 
     return {"filename": file.filename, "chunks_added": len(chunks)}
 
