@@ -31,7 +31,7 @@ sys.path.insert(0, str(BACKEND_DIR))  # so `ingestion` / `retrieval` import from
 
 from ingestion.chunking import process_pdf  # noqa: E402
 from retrieval.vectorstore import EMBEDDING_MODEL, VectorStore  # noqa: E402
-from metrics import contains_evidence, hit_at_k, recall_at_k, reciprocal_rank  # noqa: E402
+from metrics import contains_evidence, hit_at_k, normalize, recall_at_k, reciprocal_rank  # noqa: E402
 
 
 def load_test_set(path: Path) -> list[dict]:
@@ -46,6 +46,15 @@ def load_test_set(path: Path) -> list[dict]:
         if isinstance(q["evidence"], str):
             q["evidence"] = [q["evidence"]]
         q.setdefault("id", f"q{i + 1}")
+        # WHY: evidence made only of symbols (e.g. "→", "≠") normalizes to "",
+        # and "" is a substring of every chunk, so it would score as a perfect
+        # rank-1 hit and silently inflate every metric.
+        for e in q["evidence"]:
+            if not normalize(e):
+                sys.exit(
+                    f"[{q['id']}] evidence {e!r} has no letters or digits, so it would match "
+                    "every chunk. Use a phrase with words around it instead."
+                )
     return questions
 
 

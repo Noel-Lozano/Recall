@@ -19,10 +19,14 @@ def normalize(text: str) -> str:
     spaces. PDF text extraction is messy (line breaks mid-sentence,
     hyphenated words, odd quote characters), so comparing raw strings
     would mark real matches as misses.
+
+    "Letter/digit" is Unicode-aware, so Greek (σ, λ), superscripts (²) and
+    accented letters (é) survive; an ASCII-only filter would turn "résumé"
+    into "r sum" and "σ²" into nothing at all.
     """
     text = text.lower()
     text = re.sub(r"-\s*\n\s*", "", text)  # re-join words hyphenated across lines
-    text = re.sub(r"[^a-z0-9]+", " ", text)
+    text = re.sub(r"[\W_]+", " ", text)
     return text.strip()
 
 

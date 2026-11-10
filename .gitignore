@@ -3,5 +3,5 @@ venv/
 .venv/
 __pycache__/
 chroma_data/
-eval/.chroma_eval/
-eval/docs/*.pdf
+backend/eval/.chroma_eval/
+backend/eval/docs/*.pdf
